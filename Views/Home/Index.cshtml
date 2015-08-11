@@ -1,0 +1,111 @@
+﻿
+    <header>
+        <div class="content-wrapper">
+            <div class="float-right">
+                <section id="login">
+                    <ul>
+                        
+                        <li><a href="~/Account/Login">Iniciar sesión</a></li>
+                    </ul>
+                </section>
+               
+            </div>
+        </div>
+    </header>
+    <div class="jumbotron">
+        <h1> misAnunciosWeb</h1>
+        <p class="lead">mis-Anuncios-Web es una página web en la cual las personas pueden buscar u ofrecer servicios en su ciudad</p>
+    </div>
+    <div class="row">
+        <div class="col-md-6">
+            <form onclick="Registrar()">
+                <fieldset>
+                    <legend>Registrate:</legend>
+                    Nombre:<br>
+                    <input type="text" id="NombreR" name="NombreR" /><br>
+                    <br>
+                    Apellidos:<br>
+                    <input type="text" id="ApellidosR" name="ApellidosR" /><br>
+                    <br>
+                    Email:<br>
+                    <input type="email" id="EmailR" name="EmailR" /><br>
+                    <br>
+                    Contraseña:<br>
+                    <input type="password" id="PasswordR" name="PasswordR" /><br>
+                    <br>
+                    Ciudad:<br>
+                    <input type="text" id="CiudadR" name="CiudadR" /><br>
+                    <br>
+                    Categoría del servicio:<br>
+                    <br>
+                    <select id="Categorias" onload="getCategorias()">
+                        <p id="categorias" /p>
+                    </select>
+                    <br><br>
+                    <input type="submit" value="Registrar">
+                </fieldset>
+            </form>
+        </div>
+        <div class="col-md-6">
+            <h2>Inicia Sesión</h2>
+            <p>Haz click en el link situado debajo para iniciar sesión</p>
+        </div>
+    </div>
+    <div id="header">
+        <h3>Búsqueda de servicios</h3>
+
+    </div>
+    <div id="main">
+        <label>Ciudad</label>
+        <input type="search" id="Ciudad" name="Ciudad" />
+        <button type="button" onclick="Buscar()" id="Buscar">Buscar</button>
+        <p id="datos" /p>
+        <div>
+            @section scripts {
+                <script>
+                    
+                    function Buscar() {
+                        var Ciudad = $('#Ciudad').val();
+
+                        $.getJSON("http://mis-anuncios-web.azurewebsites.net/api/EntradaDatos" + "/" + Ciudad)
+                            .done(function (data) {
+                                $.each(data, function (key, item) {
+                                    $('<li>', { text: formatItem(item) }).appendTo($('#datos'));
+                                });
+                            })
+                            .fail(function (jqXHR, textStatus, err) {
+                                $('#datos').text('Error: ' + err);
+                            });
+                    }
+
+                    function formatItem(item) {
+                        return item.Nombre + '      ' + item.Apellidos + '      ' + item.Email + '      ' + '      ' + item.Ciudad + '      ' + item.CatServicio;
+                    }
+
+                    function Registrar() {
+
+                    }
+
+                    function getCategorias()
+                    {
+                        $.getJSON("http://mis-anuncios-web.azurewebsites.net/api/Categorias")
+                            .done(function (data) {
+                                $.each(data, function (key, item) {
+                                    $({ text: formatList(item) }).appendTo($('#categorias'));
+                                });
+                            })
+                            .fail(function (jqXHR, textStatus, err) {
+                                $('#categorias').text('Error: ' + err);
+                            });
+                    }
+
+                    function formatList (item)
+                    {
+                        return '<option value="'+item+'">'+item+"</option>";
+                    }
+
+                    
+                </script>
+            }
+</div>
+</div>
